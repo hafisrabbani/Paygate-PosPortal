@@ -1,4 +1,4 @@
-const knex = require('knex')({
+module.exports = require('knex')({
     client: process.env.DB_CONNECTION,
     connection: {
         host: process.env.DB_HOST,
