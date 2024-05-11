@@ -1,5 +1,10 @@
 exports.exceptionHandler = async (err, req, res, next) => {
     const MODE = process.env.NODE_ENV;
+    console.log('====================================================')
+    console.log("Error: ", err.message);
+    console.log("Stack Trace: ", err.stack)
+    console.log("Environment: ", MODE);
+    console.log('====================================================')
 
     if (MODE === 'production') {
         return res.status(500).json({
