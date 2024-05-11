@@ -106,6 +106,17 @@ const GetStatusPayment = async (order_id) => {
     }
 }
 
+const RealTimeStatusPayment = async (order_id) => {
+    try{
+        const data = await getPayment(order_id);
+        if(!data) return null;
+        return (data.status === 1);
+    }catch (e) {
+        console.log(e.response.data)
+        throw e
+    }
+}
+
 
 const HandleCallback = async (data) => {
     try{
@@ -128,6 +139,7 @@ module.exports = {
     GetStatusPayment,
     HandleCallback,
     generateSignatureCallback,
+    RealTimeStatusPayment
 }
 
 

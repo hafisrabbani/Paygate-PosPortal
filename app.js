@@ -19,6 +19,7 @@ app.use(cors({
 }));
 
 
+app.use('/webhooks', require('./routes/web/routes'));
 app.use('/api/v1/payment', require('./routes/api/payment'));
 
 app.use(helmet());
@@ -26,5 +27,4 @@ app.use(express.static('public'));
 app.set('view engine', 'ejs');
 
 app.use(exceptionHandler);
-
 module.exports = app;

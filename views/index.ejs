@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Waiting Payment</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Rubik:ital,wght@0,300..900;1,300..900&display=swap');
+
+        body {
+            font-family: "Montserrat", sans-serif;
+            font-optical-sizing: auto;
+            font-weight: 600;
+            font-style: normal;
+            background: linear-gradient(180deg, #1A6BCD, #05152A);
+            background-size: cover;
+            background-attachment: fixed;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0;
+            padding: 0;
+        }
+
+        .card {
+            background-color: #fff;
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            max-width: 400px;
+            width: 100%;
+            margin: 20px;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .text-dark {
+            color: #212529;
+        }
+
+        .mb-2 {
+            margin-bottom: 10px;
+        }
+
+        .mb-4 {
+            margin-bottom: 20px;
+        }
+
+        .mt-5 {
+            margin-top: 25px;
+        }
+
+        .img-fluid {
+            max-width: 100%;
+            height: auto;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-body">
+                    <div class="text-center">
+                        <h1 class="text-dark font-weight-bold mb-4">QRIS Code</h1>
+                        <img src="<%= data.qr_url %>" alt="QR Code" class="img-fluid border border-2 border-white">
+                        <p class="text-dark mb-2 fs-6">Expired: <span class="font-weight-bold"><%= data.expired_time %></span></p>
+                    </div>
+                    <div id="countdown" class="text-center mb-4">
+                        <p class="text-secondary font-weight-bold mb-2">Time Remaining: <span id="time" class="text-danger">00:00</span></p>
+                        <p class="text-secondary font-weight-bold mb-2">Payment Reference : <span class="text-dark"><%= data.reference %></span></p>
+                        <p class="text-secondary font-weight-bold mb-2">Merchant Reference : <span class="text-dark"><%= data.merchant_ref %></span></p>
+                    </div>
+                    <div class="text-center">
+                        <p class="text-dark font-weight-bold mb-2">Total Amount:</p>
+                        <h3 class="text-primary mb-4"><span id="amount">Rp <%= data.amount.toLocaleString() %></span></h3>
+                    </div>
+                    <div class="text-center">
+                        <p class="text-dark font-weight-bold mb-2">Status:</p>
+                        <h3 id="status_payment" class="text-dark mb-4"><b>UNPAID</b></h3>
+                    </div>
+                    <div class="text-center mt-5">
+                        <small>Powered By</small>
+                        <br>
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/Logo_QRIS.svg/1200px-Logo_QRIS.svg.png"
+                             alt="QRIS Logo" class="img-fluid" style="width: 70px;">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
+
+<script>
+    const expiredTime = new Date('<%= data.expired_time %>').getTime();
+    const x = setInterval(function () {
+        const now = new Date().getTime();
+        const distance = expiredTime - now;
+
+        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+        document.getElementById('time').innerText = minutes + "m " + seconds + "s ";
+
+        if (distance < 0) {
+            clearInterval(x);
+            document.getElementById('time').innerText = "EXPIRED";
+        }
+    }, 1000);
+
+    function realTimeStatus(url) {
+        return fetch(url)
+            .then(response => response.json())
+            .then(data => {
+                return data.data;
+            });
+    }
+
+    setInterval(async function () {
+        try {
+            const data = await realTimeStatus('<%= data.real_time_status %>');
+            if(data.status){
+                document.getElementById('status_payment').innerText = 'PAID';
+
+                setTimeout(function(){
+                    window.location.href = '<%= data.redirect_url %>';
+                }, 3000);
+            }
+        } catch (error) {
+            console.error('Error fetching real-time status:', error);
+        }
+    }, 1000);
+
+</script>
+
+</body>
+</html>
