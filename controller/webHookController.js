@@ -24,7 +24,7 @@ exports.GetQRISPayment = async (req, res, next) => {
             merchant_ref: data.merchant_ref,
             amount: data.amount,
             qr_url: data.qr_url,
-            expired_time: moment(convertTime(data.expired_time)).format('DD-MM-YYYY HH:mm:ss'),
+            expired_time: moment(convertTime(data.expired_time)).format('MM-DD-YYYY HH:mm:ss'),
             real_time_status: realTimeStatus,
             redirect_url: redirectUrl
         }
