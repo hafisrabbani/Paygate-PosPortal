@@ -67,7 +67,7 @@ exports.CreatePayment = async (req, res, next) => {
         if (!order_id) return errorHandler({type: 'BadRequestError'}, req, res, next);
 
         const data = await CreatePayment(order_id)
-        const webhookUrl = appConfig.url+'webhooks/?order_id='+order_id
+        const webhookUrl = appConfig.url+'/webhooks/?order_id='+order_id
         return res.status(200).json({
             message: "Success",
             data,
