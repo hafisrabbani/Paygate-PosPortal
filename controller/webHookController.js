@@ -72,3 +72,12 @@ exports.SuccessPayment = async (req, res, next) => {
         next(error)
     }
 }
+
+
+exports.ErrorPayment = async (req, res, next) => {
+    try {
+        return res.render('error');
+    } catch (error) {
+        next(error)
+    }
+}

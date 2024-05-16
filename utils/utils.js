@@ -9,27 +9,11 @@ exports.generateRandomString = (length) => {
     return result;
 }
 
-exports.generateTime = (time, type) => {
-    const availTime = {
-        MINUTES: 'minutes',
-        HOURS: 'hours',
-        DAYS: 'days',
-    }
-
-    try {
-        switch (type) {
-            case availTime.MINUTES:
-                return moment().add(time, 'minutes').unix();
-            case availTime.HOURS:
-                return moment().add(time, 'hours').unix();
-            case availTime.DAYS:
-                return moment().add(time, 'days').unix();
-            default:
-                throw new Error('Invalid time type');
-        }
-    }catch (error){
-        throw error;
-    }
+exports.generateTime = (time) => {
+    // add expired 1 minute with current time and unix time
+    console.log("current time: ", moment().unix())
+    console.log("expired time: ", moment().add(time, 'minutes').unix())
+    return moment().add(time, 'minutes').unix();
 }
 
 exports.convertTime = (time) => {

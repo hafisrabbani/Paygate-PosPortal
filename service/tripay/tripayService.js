@@ -41,6 +41,7 @@ const GetPaymentChannel = async () => {
 const CreatePayment = async (order_id) => {
     try{
         const data = await getPayment(order_id);
+        if(!data) return null;
         if(data.payment_reference){
             return GetStatusPayment(order_id);
         }
@@ -51,9 +52,8 @@ const CreatePayment = async (order_id) => {
             amount: data.amount,
             customer_name: "default",
             customer_email: "default@gmail.com",
-            customer_phone: "08123456789",
             order_items: data.product_detail,
-            return_url: "http://localhost:3000/redirect",
+            callback_url: PAYGATE_INFO.apiBaseUrl + "/api/v1/payment/callback",
             expired_time: data.expired_time,
             signature: signature
         }

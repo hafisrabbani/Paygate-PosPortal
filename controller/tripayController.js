@@ -8,6 +8,7 @@ const {
 } = require("../service/tripay/tripayService")
 const {errorHandler} = require('../middleware/errorHandler');
 const {generateTime} = require('../utils/utils');
+const appConfig = require('../config/app.config');
 exports.GetPaymentChannel = async (req, res, next) => {
     try {
         const data = await GetPaymentChannel()
@@ -28,7 +29,7 @@ exports.CreateTransaction = async (req, res, next) => {
             expired_minute
         } = req.body
         if (!order_id || !amount || !expired_minute) return errorHandler({type: 'BadRequestError'}, req, res, next);
-        const expired_time = generateTime(expired_minute, "minutes")
+        const expired_time = generateTime(expired_minute)
         const data = await InsertPaymentDB(
             {
                 order_id,
@@ -66,9 +67,11 @@ exports.CreatePayment = async (req, res, next) => {
         if (!order_id) return errorHandler({type: 'BadRequestError'}, req, res, next);
 
         const data = await CreatePayment(order_id)
+        const webhookUrl = appConfig.url+'webhooks/?order_id='+order_id
         return res.status(200).json({
             message: "Success",
-            data
+            data,
+            webhook_url: webhookUrl
         });
     }catch (error) {
         next(error);
