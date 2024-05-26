@@ -44,9 +44,24 @@ services:
     volumes:
       - db_data:/var/lib/mysql
 
+  exporter:
+    image: prom/mysqld-exporter
+    container_name: mysql-exporter
+    environment:
+      - DATA_SOURCE_NAME=devopsadmin:devops1@tcp(paygate-posportal-db:3306)/
+    ports:
+      - "9104:9104"
+    networks:
+      - paygate-network
+      - monitoring
+    depends_on:
+      - db
+
 networks:
   paygate-network:
     driver: bridge
+  monitoring:
+    external: true
 
 volumes:
   db_data:
