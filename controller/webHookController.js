@@ -44,11 +44,16 @@ exports.RealTimeStatusPayment = async (req, res, next) => {
         if (!order_id) return errorHandler({type: 'BadRequestError'}, req, res, next);
         const data = await RealTimeStatusPayment(order_id)
         if (data === null) return errorHandler({type: 'NotFoundError'}, req, res, next);
+        const isExpired = moment().unix() > data.expired_time
+        console.log("isExpired: ", isExpired)
+        console.log(moment().unix())
+        console.log(data.expired_time)
         return res.status(200).json({
             message: "Success",
             data: {
                 order_id: order_id,
-                status: data
+                status: data,
+                is_expired: isExpired
             }
         })
     } catch (error) {

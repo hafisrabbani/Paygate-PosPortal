@@ -71,7 +71,7 @@
         if (distance < 0) {
             countdown.innerText = '00:00';
             setTimeout(function () {
-                window.location = '/failed'
+                window.location = '/webhooks/failed'
             }, 1000);
         }
     }, 1000);
@@ -87,14 +87,18 @@
     setInterval(async function () {
         try {
             const data = await realTimeStatus('<%= data.real_time_status %>');
-            if (data.status) {
+            if (data.status.status) {
                 document.getElementById('overlay').style.display = 'block';
                 setTimeout(function () {
                     window.location = '<%= data.redirect_url %>'
                 }, 2000);
             }
+
+            if(data.is_expired){
+                console.log("Expired")
+                window.location = '/webhooks/failed'
+            }
         } catch (error) {
-            window.location = '<%= data.redirect_url %>'
             console.log("====== Error ======")
             console.log("Message: ", error.message)
             console.log("Name: ", error.name)

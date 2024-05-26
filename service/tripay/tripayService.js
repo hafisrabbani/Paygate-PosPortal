@@ -110,7 +110,10 @@ const RealTimeStatusPayment = async (order_id) => {
     try{
         const data = await getPayment(order_id);
         if(!data) return null;
-        return (data.status === 1);
+        return {
+            status: (data.status === 1),
+            expired_time: data.expired_time
+        }
     }catch (e) {
         console.log(e.response.data)
         throw e
