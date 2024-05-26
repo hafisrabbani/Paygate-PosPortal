@@ -53,14 +53,14 @@ services:
       - "9104:9104"
     networks:
       - paygate-network
-      - monitoring
+      - monitoring_monitoring
     depends_on:
       - db
 
 networks:
   paygate-network:
     driver: bridge
-  monitoring:
+  monitoring_monitoring:
     external: true
 
 volumes:
