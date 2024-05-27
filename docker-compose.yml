@@ -42,6 +42,7 @@ services:
     networks:
       - paygate-network
     volumes:
+      - ./db.sql:/docker-entrypoint-initdb.d/db.sql
       - db_data:/var/lib/mysql
 
   exporter:
@@ -57,6 +58,43 @@ services:
     depends_on:
       - db
 
+  cadvisor:
+    image: google/cadvisor:latest
+    container_name: cadvisor
+    ports:
+      - "8080:8080"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /sys:/sys
+      - /var/lib/docker/:/var/lib/docker:ro
+    networks:
+      - paygate-network
+
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - "9090:9090"
+    networks:
+      - paygate-network
+      - monitoring_monitoring
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    depends_on:
+      - prometheus
+    networks:
+      - paygate-network
+      - monitoring_monitoring
+
 networks:
   paygate-network:
     driver: bridge
@@ -65,3 +103,4 @@ networks:
 
 volumes:
   db_data:
+
