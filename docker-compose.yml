@@ -99,7 +99,7 @@ networks:
   paygate-network:
     driver: bridge
   monitoring_monitoring:
-    external: true
+    driver: bridge
 
 volumes:
   db_data:
