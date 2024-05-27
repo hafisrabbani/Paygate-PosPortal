@@ -2,10 +2,9 @@ global:
   scrape_interval: 15s
 
 scrape_configs:
-  - job_name: 'cadvisor'
+  - job_name: node
     static_configs:
-      - targets: ['cadvisor:8080']
-
-  - job_name: 'mysql-exporter'
+      - targets: ['localhost:9100']  # cAdvisor endpoint (more on this later)
+  - job_name: app
     static_configs:
-      - targets: ['exporter:9104']
+      - targets: ['paygate-posportal-app:5000']  # Assuming app exposes metrics endpoint
