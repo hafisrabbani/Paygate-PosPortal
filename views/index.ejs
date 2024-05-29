@@ -50,31 +50,35 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
         crossorigin="anonymous"></script>
-<script src="/js/web_support.js" defer></script>
 <script>
-    const expiredTime = new Date('<%= data.expired_time %>').getTime();
+    const expiredTime = new Date('<%= data.expired_time %>');
+    console.log("expiredTime", expiredTime);
+
     const countdown = document.getElementById('time');
-    window.addEventListener("flutterInAppWebViewPlatformReady", function (event) {
-        window.flutter_inappwebview.callHandler('onReady', 'Ready');
-    });
+
     setInterval(function () {
         const now = new Date().getTime();
         const distance = expiredTime - now;
-        if (distance < 0) {
-            countdown.innerText = '00:00';
-            return;
-        }
-        const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-        countdown.innerText = `${hours}:${minutes}:${seconds}`;
+
         if (distance < 0) {
             countdown.innerText = '00:00';
             setTimeout(function () {
-                window.location = '/webhooks/failed'
+                window.location = '/webhooks/failed';
             }, 1000);
+            return;
         }
+
+        const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+        const paddedHours = String(hours).padStart(2, '0');
+        const paddedMinutes = String(minutes).padStart(2, '0');
+        const paddedSeconds = String(seconds).padStart(2, '0');
+
+        countdown.innerText = `${paddedHours}:${paddedMinutes}:${paddedSeconds}`;
     }, 1000);
+
 
     function realTimeStatus(url) {
         return fetch(url)
@@ -106,18 +110,6 @@
             console.log("===================")
         }
     }, 4000);
-    function sendEventFlutterPayment(order_id, status) {
-        const eventsData = {
-            order_id: order_id,
-            status: status
-        };
-
-        PaymentStatus.post(JSON.stringify(eventsData));
-    }
-
-    window.onload = function() {
-        sendEventFlutterPayment('123456', 'pending');
-    }
 </script>
 
 </body>
