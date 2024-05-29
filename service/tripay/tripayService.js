@@ -1,4 +1,5 @@
 const {PAYGATE_INFO} = require("../../config/tripay.config")
+const {url} = require("../../config/app.config")
 const {LIST_CHANNEL,CREATE_CLOSED_PAY,GET_STATUS_PAYMENT} = require("../../constant/tripay.constant")
 const {
     createPayment : insertPayment,
@@ -53,7 +54,7 @@ const CreatePayment = async (order_id) => {
             customer_name: "default",
             customer_email: "default@gmail.com",
             order_items: data.product_detail,
-            callback_url: PAYGATE_INFO.apiBaseUrl + "/api/v1/payment/callback",
+            callback_url: url + "/api/v1/payment/callback",
             expired_time: data.expired_time,
             signature: signature
         }

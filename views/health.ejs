@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+<style>
+    .button{
+        background-color: #4CAF50;
+        border: none;
+        color: white;
+        padding: 15px 32px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        margin: 4px 2px;
+        cursor: pointer;
+    }
+</style>
+</head>
+<body>
+<button class="button" onclick="sendEventListeners()">Send Event Listeners</button>
+<a href="/webhooks/health">Open Iframe</a>
+</body>
+<script>
+    function sendEventListeners(){
+        window.addEventListener('message', function(event){
+            console.log('event');
+        });
+    }
+
+    setInterval(function(){
+        window.location.href = '/webhooks/health?order_id=123';
+    }, 2000);
+</script>
+</html>

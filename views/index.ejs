@@ -96,7 +96,7 @@
 
             if(data.is_expired){
                 console.log("Expired")
-                window.location = '/webhooks/failed'
+                window.location = '/webhooks/failed?order_id=<%= data.order_id %>'
             }
         } catch (error) {
             console.log("====== Error ======")
@@ -106,7 +106,18 @@
             console.log("===================")
         }
     }, 4000);
+    function sendEventFlutterPayment(order_id, status) {
+        const eventsData = {
+            order_id: order_id,
+            status: status
+        };
 
+        PaymentStatus.post(JSON.stringify(eventsData));
+    }
+
+    window.onload = function() {
+        sendEventFlutterPayment('123456', 'pending');
+    }
 </script>
 
 </body>

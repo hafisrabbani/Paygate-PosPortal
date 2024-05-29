@@ -81,8 +81,15 @@ exports.SuccessPayment = async (req, res, next) => {
 
 exports.ErrorPayment = async (req, res, next) => {
     try {
-        return res.render('error');
+        const order_id = req.query.order_id
+        return res.render('error',{
+            order_id
+        });
     } catch (error) {
         next(error)
     }
+}
+
+exports.health = async (req, res, next) => {
+    return res.render('health');
 }
