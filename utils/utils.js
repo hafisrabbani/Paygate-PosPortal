@@ -10,7 +10,8 @@ exports.generateRandomString = (length) => {
 }
 
 exports.generateTime = (time) => {
-    // add expired 1 minute with current time and unix time
+    // set timezone to Asia/Jakarta
+    moment.tz.setDefault("Asia/Jakarta");
     console.log("current time: ", moment().unix())
     console.log("expired time: ", moment().add(time, 'minutes').unix())
     return moment().add(time, 'minutes').unix();
