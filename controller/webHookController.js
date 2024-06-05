@@ -8,6 +8,7 @@ const {
 const {errorHandler} = require("../middleware/errorHandler");
 const moment = require('moment')
 const appConfig = require('../config/app.config')
+const {getPayment} = require("../repositories/paymentRepository");
 exports.GetQRISPayment = async (req, res, next) => {
     try {
         const {
@@ -15,6 +16,7 @@ exports.GetQRISPayment = async (req, res, next) => {
         } = req.query
         if (!order_id) return errorHandler({type: 'BadRequestError'}, req, res, next);
         const data = await GetStatusPayment(order_id)
+        const dataLocal = await getPayment(order_id);
         if (!data) return errorHandler({type: 'NotFoundError'}, req, res, next);
         const realTimeStatus = `${appConfig.url}/webhooks/real-time-status-payment?order_id=${order_id}`
         const redirectUrl = `${appConfig.url}/webhooks/success?order_id=${order_id}`
@@ -24,7 +26,7 @@ exports.GetQRISPayment = async (req, res, next) => {
             merchant_ref: data.merchant_ref,
             amount: data.amount,
             qr_url: data.qr_url,
-            expired_time: moment(convertTime(data.expired_time)).format('MM-DD-YYYY HH:mm:ss'),
+            expired_time: moment(convertTime(dataLocal.expired_time)).format('MM-DD-YYYY HH:mm:ss'),
             real_time_status: realTimeStatus,
             redirect_url: redirectUrl
         }
