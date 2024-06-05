@@ -13,7 +13,8 @@ create table list_payment
 (
     id                int auto_increment
         primary key,
-    order_id          bigint                                not null,
+    order_id          varchar(255)                          not null,
+    
     payment_reference varchar(255) null,
     amount            bigint                                not null,
     method            varchar(255)                          not null,

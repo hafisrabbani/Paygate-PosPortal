@@ -20,8 +20,13 @@ app.use(cors({
 
 
 app.use('/webhooks', require('./routes/web/routes'));
+app.get('/api/v1/health', (req, res) => {
+    res.status(200).json({
+        status: true,
+        message: "Service Running normally"
+    })
+});
 app.use('/api/v1/payment', require('./routes/api/payment'));
-
 app.use(helmet());
 app.use(express.static('public'));
 app.set('view engine', 'ejs');

@@ -21,5 +21,8 @@
   "scripts": {
     "start": "node ./bin/www",
     "dev": "nodemon ./bin/www"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0"
   }
 }

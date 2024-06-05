@@ -1,5 +1,5 @@
 const moment = require('moment-timezone');
-
+const CryptoJS = require('crypto-js');
 exports.generateRandomString = (length) => {
     let result = '';
     const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -10,7 +10,6 @@ exports.generateRandomString = (length) => {
 }
 
 exports.generateTime = (time) => {
-    // set timezone to Asia/Jakarta
     moment.tz.setDefault("Asia/Jakarta");
     console.log("current time: ", moment().unix())
     console.log("expired time: ", moment().add(time, 'minutes').unix())
@@ -19,4 +18,12 @@ exports.generateTime = (time) => {
 
 exports.convertTime = (time) => {
     return moment.unix(time).format('YYYY-MM-DD HH:mm:ss');
+}
+
+exports.encryptAES = (text, key) => {
+    return CryptoJS.AES.encrypt(text, key).toString();
+}
+
+exports.decryptAES = (text, key) => {
+    return CryptoJS.AES.decrypt(text, key).toString(CryptoJS.enc.Utf8);
 }

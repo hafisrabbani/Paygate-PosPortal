@@ -100,9 +100,12 @@ const GetStatusPayment = async (order_id) => {
                 reference: data.payment_reference
             }
         })
-        return response.data.data
+        return {
+            ...response.data.data,
+            webhook_url: url + "/webhooks/?order_id="+order_id
+        }
     }catch (e) {
-        console.log(e.response.data)
+        console.log(e)
         throw e
     }
 }
